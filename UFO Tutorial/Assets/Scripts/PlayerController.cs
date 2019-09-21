@@ -6,19 +6,22 @@ using UnityEngine.UI;
 public class PlayerController : MonoBehaviour
 {
     public float speed = 5;
-    public int scoreGoal = 12;
+    public int scoreGoal = 20;
+    public int lives = 3;
 
     private Rigidbody2D rigidbody2;
     private int count;
 
     public Text scoreText;
     public Text winText;
+    public Text livesText;
 
     void Start()
     {
         rigidbody2 = GetComponent<Rigidbody2D>();
         count = 0;
         SetCountText();
+        SetLifeText();
         winText.text = "";
     }
 
@@ -47,14 +50,37 @@ public class PlayerController : MonoBehaviour
             count++;
             SetCountText();
             }
+
+        if(other.CompareTag("Enemy"))
+        {
+            other.gameObject.SetActive(false);
+            lives--;
+            SetLifeText();
+        }
     }
 
     void SetCountText()
     {
         scoreText.text = "Score " + count.ToString();
+
+        if(count == 12)
+        {
+            transform.position = new Vector2(100f, 50f);
+        }
+
         if(count >= scoreGoal)
         {
             winText.text = "You win! Game created by Edward Tavarez";
+        }
+    }
+
+    void SetLifeText()
+    {
+        livesText.text = "Lives: " + lives.ToString();
+        if(lives == 0)
+        {
+            winText.text = "Game Over :(";
+            this.gameObject.SetActive(false);
         }
     }
 }
